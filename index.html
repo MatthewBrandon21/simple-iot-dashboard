@@ -1,0 +1,158 @@
+<!DOCTYPE HTML><html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  <style>
+    html {
+     font-family: Arial;
+     display: inline-block;
+     margin: 0px auto;
+     text-align: center;
+    }
+    h2 { font-size: 3.0rem; }
+    p { font-size: 3.0rem; }
+    .units { font-size: 1.2rem; }
+    .dht-labels{
+      font-size: 1.5rem;
+      vertical-align:middle;
+      padding-bottom: 15px;
+    }
+  </style>
+  <title> UMN Server Room Monitoring </title>
+</head>
+<body>
+  <h2> UMN Server Room Monitoring 1 </h2>
+  <p>
+    <i class="fas fa-thermometer-half" style="color:#059e8a;"></i> 
+    <span class="dht-labels">Temperature</span> 
+    <span id="temperature">%TEMPERATURE%</span>
+    <sup class="units">&deg;C</sup>
+  </p>
+  <p>
+    <i class="fas fa-tint" style="color:#00add6;"></i> 
+    <span class="dht-labels">Humidity</span>
+    <span id="humidity">%HUMIDITY%</span>
+    <sup class="units">&percnt;</sup>
+  </p>
+  <p>
+    <i class="" style="color: #515967;">&#9729;&#65039;</i>
+    <span class="dht-labels">Gas Sensor</span> 
+    <span id="sensorGas">%GAS%</span>
+    <sup class="units">gas</sup>
+  </p>
+  <p>
+    <span style="color:#059e8a;">&#128293;</i> 
+    <span class="dht-labels">Fire Sensor</span> 
+    <span id="sensorFire">%FIRE%</span>
+    <sup class="units">fire</sup>
+  </p>
+  <p>
+    <i class="" style="color:#059e8a;">&#128682;</i> 
+    <span class="dht-labels">Door Sensor</span> 
+    <span id="door">%DOOR%</span>
+  </p>
+</body>
+<script>
+setInterval(function ( ) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.status == 200) {
+        console.log(this.responseText)
+        const obj = JSON.parse( this.responseText );
+        console.log(obj)
+      if(obj[0].suhu > 24){
+        document.getElementById("temperature").innerHTML = `<span style="color: rgb(255,0,0)">${obj[0].suhu}</span>`;
+      }else{
+        document.getElementById("temperature").innerHTML = obj[0].suhu;
+      }
+      document.getElementById("humidity").innerHTML = obj[0].humidity;
+      if(obj[0].smoke==1.0){
+        document.getElementById("sensorGas").innerHTML = "NO SMOKE Detected";
+      }else{
+        document.getElementById("sensorGas").innerHTML = "Smoke Detected";
+      }
+      if(obj[0].fire==false){
+        document.getElementById("sensorFire").innerHTML = "No Fire Detected";
+      }else{
+        document.getElementById("sensorFire").innerHTML = "Fire Detected";
+      }
+      if(obj[0].doorSensor==false){
+        document.getElementById("door").innerHTML = "PINTU TERTUTUP";
+      }else{
+        document.getElementById("door").innerHTML = "PINTU TERBUKA";
+      }
+
+      
+    }
+  };
+  xhttp.open("GET", "http://localhost:5000/sensordata", true);
+  xhttp.send();
+}, 5000 ) ;
+
+
+</script>
+</html>
+
+<!-- // Replaces placeholder with DHT values
+String processor(const String& var){
+  //Serial.println(var);
+  if(var == "TEMPERATURE"){
+    return readDHTTemperature();
+  }else if(var == "HUMIDITY"){
+    return readDHTHumidity();
+  }else if(var == "GAS"){
+    return readGas();
+  }else if(var == "DOOR"){
+    return readDoor();
+  }else if(var == "FIRE"){
+    return readFire();
+  }
+  return String();
+}
+
+void setup(){
+  // Serial port for debugging purposes
+  Serial.begin(115200);
+
+  dht.begin();
+  pinMode(DOOR_SENSOR_PIN, INPUT_PULLUP); // set ESP32 pin to input pull-up mode
+  pinMode(Fire_sensor, INPUT);
+  pinMode(Relay_1, OUTPUT);
+  // Connect to Wi-Fi
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.println("Connecting to WiFi..");
+  }
+
+  // Print ESP32 Local IP Address
+  Serial.println(WiFi.localIP());
+
+  // Route for root / web page
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/html", index_html, processor);
+  });
+  server.on("/temperature", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/plain", readDHTTemperature().c_str());
+  });
+  server.on("/humidity", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/plain", readDHTHumidity().c_str());
+  });
+  server.on("/gas", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/plain", readGas().c_str());
+  });
+  server.on("/fire", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/plain", readFire().c_str());
+  });
+  server.on("/door", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/plain", readDoor().c_str());
+  });
+
+  // Start server
+  server.begin();
+}
+ 
+void loop(){
+  
+  
+} -->
