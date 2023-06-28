@@ -11,5 +11,11 @@
       "dest": "index.js"
     }
   ],
-  "redirectToHttps": true
+  "redirects": [
+    {
+      "source": "/(.*)/?",
+      "destination": "https://simple-iot-dashboard.vercel.app/$1",
+      "type": 301
+    }
+  ]
 }
