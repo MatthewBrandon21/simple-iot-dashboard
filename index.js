@@ -17,7 +17,7 @@ const router = express.Router();
 
 let sensorArray = [];
 
-let sensor1 = {
+let sensorDefault = {
   suhu: 0,
   humidity: 0,
   smoke: 0,
@@ -26,7 +26,7 @@ let sensor1 = {
   lokasi: "Sensor 1",
 };
 
-sensorArray.push(sensor1);
+sensorArray.push(sensorDefault);
 
 router.get("/", function (req, res) {
   res.sendFile(path.join(__dirname + "/index.html"));
@@ -63,6 +63,12 @@ router.post("/sensordata", async function (req, res) {
     sensorArray.push(sensorData);
   }
   return res.send("Data created");
+});
+
+router.get("/reset", function (req, res) {
+  sensorArray = [];
+  sensorArray.push(sensorDefault);
+  return res.send("Data reseted");
 });
 
 app.use("/", router);

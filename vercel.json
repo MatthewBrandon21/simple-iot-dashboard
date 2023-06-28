@@ -10,11 +10,5 @@
       "src": "/(.*)",
       "dest": "index.js"
     }
-  ],
-  "redirects": [
-    {
-      "source": "/(.*)/?",
-      "destination": "https://simple-iot-dashboard.vercel.app/$1"
-    }
   ]
 }
