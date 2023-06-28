@@ -67,7 +67,15 @@ router.post("/sensordata", async function (req, res) {
 
 router.get("/reset", function (req, res) {
   sensorArray = [];
-  sensorArray.push(sensorDefault);
+  let sensorReset = {
+    suhu: 0,
+    humidity: 0,
+    smoke: 0,
+    fire: false,
+    doorsensor: false,
+    lokasi: "Sensor 1",
+  };
+  sensorArray.push(sensorReset);
   return res.send("Data reseted");
 });
 
