@@ -65,6 +65,35 @@ router.post("/sensordata", async function (req, res) {
   return res.send("Data created");
 });
 
+router.get("/sensordata_get", async function (req, res) {
+  if (!sensorArray.length) {
+    return res.send("Data is empty");
+  }
+  let found = 0;
+  sensorArray.forEach((sensor) => {
+    if (sensor.lokasi == req.body.lokasi) {
+      found = 1;
+      sensor.suhu = req.body.suhu;
+      sensor.humidity = req.body.humidity;
+      sensor.smoke = req.body.smoke;
+      sensor.fire = req.body.fire == 0 ? false : true;
+      sensor.doorsensor = req.body.doorsensor == 0 ? false : true;
+    }
+  });
+  if (found == 0) {
+    let sensorData = {
+      suhu: req.body.suhu,
+      humidity: req.body.humidity,
+      smoke: req.body.smoke,
+      fire: req.body.fire == 0 ? false : true,
+      doorsensor: req.body.doorsensor == 0 ? false : true,
+      lokasi: req.body.lokasi,
+    };
+    sensorArray.push(sensorData);
+  }
+  return res.send("Data created GET");
+});
+
 router.get("/reset", function (req, res) {
   sensorArray = [];
   let sensorReset = {
